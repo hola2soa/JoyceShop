@@ -9,6 +9,8 @@ module JoyceShop
     @@BASE_URI    = 'https://www.joyce-shop.com'
     @@LATEST_URI  = "#{@@BASE_URI}/PDList.asp?brand=01&item1=&item2=&ya19=&keyword=&recommand=1412170001&ob=F"
     @@POPULAR_URI = "#{@@BASE_URI}/PDList.asp?brand=01&item1=&item2=&ya19=&keyword=&recommand=1305080002&ob=F"
+    @@TOPS_URI    = "#{@@BASE_URI}/PDList.asp?brand=01&item1=110&item2=111&ya19=&keyword=&recommand=&ob=F"
+    @@PANTS_URI   = "#{@@BASE_URI}/PDList.asp?brand=01&item1=120&item2=121&ya19=&keyword=&recommand=&ob=F"
 
     # Selectors
     @@ITEM_SELECTOR      = "//div[contains(@class, 'NEW_shop_list')]/ul/li/div[contains(@class, 'NEW_shop_list_pic')]"
@@ -19,7 +21,7 @@ module JoyceShop
     @@PRICE_SELECTOR     = "#{@@ITEM_INFO_SELECTOR}/span"
 
     # Regular
-    @@TITLE_REGEX = /([\p{Han}[a-zA-Z]]+)/
+    @@TITLE_REGEX = /([．\p{Han}[a-zA-Z]]+)/
 
     def latest(page)
       uri  = uri_with_page(@@LATEST_URI, page)
@@ -29,6 +31,18 @@ module JoyceShop
 
     def popular(page)
       uri  = uri_with_page(@@POPULAR_URI, page)
+      body = fetch_data(uri)
+      filter(body)
+    end
+
+    def tops(page)
+      uri  = uri_with_page(@@TOPS_URI, page)
+      body = fetch_data(uri)
+      filter(body)
+    end
+
+    def pants(page)
+      uri  = uri_with_page(@@PANTS_URI, page)
       body = fetch_data(uri)
       filter(body)
     end
@@ -58,10 +72,9 @@ module JoyceShop
     end
 
     def extract_title(item)
-      titles = item.xpath(@@TITLE_SELECTOR).text
-                   .scan(@@TITLE_REGEX)
-                   .flatten
-      titles[1] || titles[0]
+      item.xpath(@@TITLE_SELECTOR).text
+          .scan(@@TITLE_REGEX)
+          .flatten[0]
     end
 
     def extract_price(item)

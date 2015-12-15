@@ -6,11 +6,12 @@ require 'open-uri'
 module JoyceShop
   class Scraper
     # URI
-    @@BASE_URI    = 'https://www.joyce-shop.com'
-    @@LATEST_URI  = "#{@@BASE_URI}/PDList.asp?brand=01&item1=&item2=&ya19=&keyword=&recommand=1412170001&ob=F"
-    @@POPULAR_URI = "#{@@BASE_URI}/PDList.asp?brand=01&item1=&item2=&ya19=&keyword=&recommand=1305080002&ob=F"
-    @@TOPS_URI    = "#{@@BASE_URI}/PDList.asp?brand=01&item1=110&item2=111&ya19=&keyword=&recommand=&ob=F"
-    @@PANTS_URI   = "#{@@BASE_URI}/PDList.asp?brand=01&item1=120&item2=121&ya19=&keyword=&recommand=&ob=F"
+    @@BASE_URI        = 'https://www.joyce-shop.com'
+    @@LATEST_URI      = "#{@@BASE_URI}/PDList.asp?brand=01&item1=&item2=&ya19=&keyword=&recommand=1412170001&ob=F"
+    @@POPULAR_URI     = "#{@@BASE_URI}/PDList.asp?brand=01&item1=&item2=&ya19=&keyword=&recommand=1305080002&ob=F"
+    @@TOPS_URI        = "#{@@BASE_URI}/PDList.asp?brand=01&item1=110&item2=111&ya19=&keyword=&recommand=&ob=F"
+    @@PANTS_URI       = "#{@@BASE_URI}/PDList.asp?brand=01&item1=120&item2=121&ya19=&keyword=&recommand=&ob=F"
+    @@ACCESSORIES_URI = "#{@@BASE_URI}/PDList.asp?brand=01&item1=140&item2=141&ya19=&keyword=&recommand=&ob=F"
 
     # Selectors
     @@ITEM_SELECTOR      = "//div[contains(@class, 'NEW_shop_list')]/ul/li/div[contains(@class, 'NEW_shop_list_pic')]"
@@ -47,6 +48,12 @@ module JoyceShop
       filter(body)
     end
 
+    def accessories(page)
+      uri  = uri_with_page(@@ACCESSORIES_URI, page)
+      body = fetch_data(uri)
+      filter(body)
+    end
+
     private
     def uri_with_page(uri, page)
       "#{uri}&pageno=#{page}"
@@ -64,10 +71,10 @@ module JoyceShop
 
     def parse(item)
       {
-        title: extract_title(item),
-        price: extract_price(item),
+        title:  extract_title(item),
+        price:  extract_price(item),
         images: extract_images(item),
-        link: extract_link(item)
+        link:   extract_link(item)
       }
     end
 

@@ -24,34 +24,40 @@ module JoyceShop
     # Regular
     @@TITLE_REGEX = /([．\p{Han}[a-zA-Z]]+)/
 
-    def latest(page)
+    def latest(page, options={})
       uri  = uri_with_page(@@LATEST_URI, page)
       body = fetch_data(uri)
-      filter(body)
+      data = parse_html(body)
+      filter(data, options)
     end
 
-    def popular(page)
+    def popular(page, options={})
       uri  = uri_with_page(@@POPULAR_URI, page)
       body = fetch_data(uri)
-      filter(body)
+      data = parse_html(body)
+      filter(data, options)
     end
 
-    def tops(page)
+    def tops(page, options={})
       uri  = uri_with_page(@@TOPS_URI, page)
       body = fetch_data(uri)
-      filter(body)
+      data = parse_html(body)
+      filter(data, options)
     end
 
-    def pants(page)
+    def pants(page, options={})
       uri  = uri_with_page(@@PANTS_URI, page)
       body = fetch_data(uri)
-      filter(body)
+      data = parse_html(body)
+      filter(data, options)
     end
 
-    def accessories(page)
+    def accessories(page, options={})
       uri  = uri_with_page(@@ACCESSORIES_URI, page)
       body = fetch_data(uri)
-      filter(body)
+      data = parse_html(body)
+      filter(data, options)
+    end
     end
 
     private
@@ -60,10 +66,31 @@ module JoyceShop
     end
 
     def fetch_data(uri)
-      open(uri) {|file| file.read}
+      open(uri) { |file| file.read }
     end
 
-    def filter(raw)
+    # Filter
+    # ------------------------------------------------------------
+    def filter(data, options)
+      results = data
+
+      unless options.empty?
+        results = match_price(results, options[:price_boundary]) if options[:price_boundary]
+      end
+
+      results
+    end
+
+    def match_price(data, boundary)
+      lower_bound = boundary.first || 0
+      upper_bound = boundary.last  || Float::INFINITY
+
+      data.select { |item| lower_bound <= item[:price] && item[:price] <= upper_bound }
+    end
+
+    # Parser
+    # ------------------------------------------------------------
+    def parse_html(raw)
       Oga.parse_html(raw)
          .xpath(@@ITEM_SELECTOR)
          .map { |item| parse(item) }

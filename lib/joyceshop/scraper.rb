@@ -1,10 +1,12 @@
 #!/usr/bin/env ruby
 require 'oga'
+require 'uri'
 require 'open-uri'
 
 # scrape data
 module JoyceShop
   class Scraper
+
     # URI
     @@BASE_URI        = 'https://www.joyce-shop.com'
     @@LATEST_URI      = "#{@@BASE_URI}/PDList.asp?brand=01&item1=&item2=&ya19=&keyword=&recommand=1412170001&ob=F"
@@ -12,6 +14,7 @@ module JoyceShop
     @@TOPS_URI        = "#{@@BASE_URI}/PDList.asp?brand=01&item1=110&item2=111&ya19=&keyword=&recommand=&ob=F"
     @@PANTS_URI       = "#{@@BASE_URI}/PDList.asp?brand=01&item1=120&item2=121&ya19=&keyword=&recommand=&ob=F"
     @@ACCESSORIES_URI = "#{@@BASE_URI}/PDList.asp?brand=01&item1=140&item2=141&ya19=&keyword=&recommand=&ob=F"
+    @@SEARCH_URI      = "#{@@BASE_URI}/PDList.asp?"
 
     # Selectors
     @@ITEM_SELECTOR      = "//div[contains(@class, 'NEW_shop_list')]/ul/li/div[contains(@class, 'NEW_shop_list_pic')]"
@@ -58,11 +61,21 @@ module JoyceShop
       data = parse_html(body)
       filter(data, options)
     end
+
+    def search(keyword, options={})
+      uri  = uri_with_search(keyword)
+      body = fetch_data(uri)
+      data = parse_html(body)
+      filter(data, options)
     end
 
     private
     def uri_with_page(uri, page)
       "#{uri}&pageno=#{page}"
+    end
+
+    def uri_with_search(keyword)
+      "#{@@SEARCH_URI}keyword=#{URI.escape(keyword)}"
     end
 
     def fetch_data(uri)

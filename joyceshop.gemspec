@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'joyceshop'
-  s.version     = '0.0.1'
-  s.date        = '2015-12-14'
+  s.version     = '0.0.2'
+  s.date        = '2016-01-02'
   s.summary     = 'Scraper for JoyceShop'
   s.description = "This is a gem scraping joyceshop's website and returns the popular/latest items"
   s.authors     = ['Even Chang',  'Luis Herrera', 'Katy Lee', 'Frank Lee']

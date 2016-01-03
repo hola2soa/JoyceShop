@@ -18,8 +18,8 @@ module JoyceShop
 
     # Selectors
     @@ITEM_SELECTOR      = "//div[contains(@class, 'NEW_shop_list')]/ul/li/div[contains(@class, 'NEW_shop_list_pic')]"
-    @@LINK_SELECTOR      = 'a'
-    @@IMAGE_SELECTOR     = "a/img[contains(@class, 'lazyload')]"
+    @@LINK_SELECTOR      = 'a[1]/@href'
+    @@IMAGE_SELECTOR     = "a/img[contains(@class, 'lazyload')]/@src"
     @@ITEM_INFO_SELECTOR = "div[contains(@class, 'NEW_shop_list_info')]"
     @@TITLE_SELECTOR     = "#{@@ITEM_INFO_SELECTOR}/div[1]"
     @@PRICE_SELECTOR     = "#{@@ITEM_INFO_SELECTOR}/span"
@@ -129,13 +129,13 @@ module JoyceShop
     end
 
     def extract_images(item)
-      image       = item.xpath(@@IMAGE_SELECTOR).attribute(:src).first.value
+      image       = item.xpath(@@IMAGE_SELECTOR).text
       image_hover = image.sub(/\.jpg/, '-h.jpg')
       ["#{@@BASE_URI}#{image}", "#{@@BASE_URI}#{image_hover}"]
     end
 
     def extract_link(item)
-      "#{@@BASE_URI}/#{item.xpath(@@LINK_SELECTOR).attribute(:href).first.value}"
+      "#{@@BASE_URI}/#{item.xpath(@@LINK_SELECTOR).text}"
     end
   end
 end

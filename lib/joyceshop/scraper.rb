@@ -6,6 +6,8 @@ require 'open-uri'
 # scrape data
 module JoyceShop
   class Scraper
+    # Types
+    @@VALID_TYPES = [:tops, :popular, :pants, :pants, :accessories, :latest]
 
     # URI
     @@BASE_URI        = 'https://www.joyce-shop.com'
@@ -67,6 +69,13 @@ module JoyceShop
       body = fetch_data(uri)
       data = parse_html(body)
       filter(data, options)
+    end
+
+    def scrape(type, page, options = {})
+      abort "only supports #{@@VALID_TYPES}" unless @@VALID_TYPES.include?(type.to_sym)
+
+      method = self.method(type)
+      method.call(page, options)
     end
 
     private

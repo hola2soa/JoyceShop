@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+# require 'joyceshop' # for production
+require_relative '../lib/joyceshop.rb' # for testing
+
+@scraper = JoyceShop::Scraper.new
+
+# command type keyword lprice hprice page_limit
+def parse_args argv
+  input_length = argv.length
+  abort 'invalid usage' unless input_length <= 5
+
+  if input_length == 0  # scrape main category
+    @scraper.scrape('latest')
+  elsif input_length == 1  # scrape main category
+    @scraper.scrape(argv[0])
+  elsif input_length == 2
+    t = argv[1].to_i
+    if t != 0
+      options = { page_limit: argv[1] }
+    else
+      options = { keyword: argv[1] }
+    end
+    @scraper.scrape(argv[0], options)
+  elsif input_length == 3
+    options = { keyword: argv[1], page_limit: argv[2] }
+    @scraper.scrape(argv[0], options)
+  elsif input_length == 5
+    options = { keyword: argv[2], page_limit: argv[5],
+      price_boundary: [argv[3], argv[4]]
+    }
+    @scraper.scrape_filter(argv[0], options)
+  end
+end
+
+puts parse_args ARGV

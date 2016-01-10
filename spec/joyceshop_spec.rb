@@ -1,66 +1,46 @@
-require 'minitest/autorun'
-require 'minitest/rg'
-require 'yaml'
-require 'vcr'
-require 'webmock/minitest'
-require './lib/joyceshop'
+require_relative 'spec_helper'
+# encoding: utf-8
 
-VCR.configure do |config|
-  config.cassette_library_dir = './spec/fixtures/vcr_cassettes'
-  config.hook_into :webmock
-end
-
-VCR.use_cassette 'joyceshop' do
-  describe 'joyceshop' do
+VCR.use_cassette 'JoyceShop' do
+  describe 'check if joyceshop tests pass' do
     before do
       @scraper = JoyceShop::Scraper.new
     end
 
     describe 'fetch popular' do
-
-      it 'should have correct format' do
-        VCR.insert_cassette 'popular page 1'
-        items = @scraper.popular(1)
-        item  = items.first
-
-        items.must_be_instance_of Array
-        items.wont_be_empty
-
-        item.must_be_instance_of Hash
-        item[:title].wont_be_nil
-        item[:title].must_be_instance_of String
-        item[:price].wont_be_nil
-        item[:price].must_be_instance_of Fixnum
-        item[:images].wont_be_nil
-        item[:images].must_be_instance_of Array
-        item[:link].wont_be_nil
-        item[:link].must_be_instance_of String
-        VCR.eject_cassette
+      manage_cassettes 'popular items'
+      it 'should check correct structure' do
+        options = { keyword: 'looney' }
+        items = @scraper.popular(1, options)
+        check_correct_structure items
       end
     end
 
-    describe 'fetch latest' do
-
-      it 'should have correct format' do
-        VCR.insert_cassette 'latest page 1'
-        items = @scraper.latest(1)
-        item  = items.first
-
-        items.must_be_instance_of Array
-        items.wont_be_empty
-
-        item.must_be_instance_of Hash
-        item[:title].wont_be_nil
-        item[:title].must_be_instance_of String
-        item[:price].wont_be_nil
-        item[:price].must_be_instance_of Fixnum
-        item[:images].wont_be_nil
-        item[:images].must_be_instance_of Array
-        item[:link].wont_be_nil
-        item[:link].must_be_instance_of String
-        VCR.eject_cassette
+    describe 'fetch pants' do
+      manage_cassettes 'pants items'
+      it 'should check correct structure' do
+        items = @scraper.pants(1)
+        check_correct_structure items
       end
     end
 
+    describe 'fetch tops' do
+      manage_cassettes 'tops items'
+      it 'should check correct structure' do
+        items = @scraper.tops(1)
+        check_correct_structure items
+      end
+    end
+
+    describe 'fetch accessories' do
+      manage_cassettes 'accessories'
+      it 'should check correct structure' do
+        options = { keyword: 'looney',
+          page_limit: 12, price_boundary: [100, 900]
+        }
+        items = @scraper.popular('accessories', options)
+        check_correct_structure items
+      end
+    end
   end
 end

@@ -10,11 +10,11 @@ module JoyceShop
     BASE_URL        = 'https://www.joyce-shop.com'
     BASE_SCRAPE_URL = "#{BASE_URL}/PDList.asp?"
 
-    LATEST_URI      = "#{BASE_SCRAPE_URL}brand=01&item1=&item2=&ya19=&keyword=&recommand=1412170001&ob=F"
-    POPULAR_URI     = "#{BASE_SCRAPE_URL}brand=01&item1=&item2=&ya19=&keyword=&recommand=1305080002&ob=F"
-    TOPS_URI        = "#{BASE_SCRAPE_URL}brand=01&item1=110&item2=111&ya19=&keyword=&recommand=&ob=F"
-    PANTS_URI       = "#{BASE_SCRAPE_URL}brand=01&item1=120&item2=121&ya19=&keyword=&recommand=&ob=F"
-    ACCESSORIES_URI = "#{BASE_SCRAPE_URL}brand=01&item1=140&item2=141&ya19=&keyword=&recommand=&ob=F"
+    LATEST_URI      = "#{BASE_SCRAPE_URL}brand=01&item1=&item2=&ya19=&recommand=1412170001&ob=F"
+    POPULAR_URI     = "#{BASE_SCRAPE_URL}brand=01&item1=&item2=&ya19=&recommand=1305080002&ob=F"
+    TOPS_URI        = "#{BASE_SCRAPE_URL}brand=01&item1=110&item2=111&ya19=&recommand=&ob=F"
+    PANTS_URI       = "#{BASE_SCRAPE_URL}brand=01&item1=120&item2=121&ya19=&recommand=&ob=F"
+    ACCESSORIES_URI = "#{BASE_SCRAPE_URL}brand=01&item1=140&item2=141&ya19=&recommand=&ob=F"
 
     # xml selectors that will be used to scrape data
     ITEM_SELECTOR   = "//div[contains(@class, 'NEW_shop_list')]/ul/li/div[contains(@class, 'NEW_shop_list_pic')]"
